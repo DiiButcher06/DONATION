@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Demo Payment</title>
+
+<style>
+  body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    color: white;
+    background: black;
+    background-image: url('pexels.jpg'); 
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+
+  .container {
+    max-width: 400px;
+    margin: 100px auto;
+    background: rgba(0,0,0,0.7);
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 0 15px rgba(255,255,255,0.2);
+    text-align: center;
+  }
+
+  h1 {
+    margin-bottom: 20px;
+    font-weight: 300;
+    border-bottom: 1px solid white;
+    padding-bottom: 10px;
+  }
+
+  label {
+    font-size: 16px;
+  }
+
+  input {
+    width: 100%;
+    margin-top: 10px;
+    padding: 10px;
+    border-radius: 6px;
+    border: none;
+    margin-bottom: 20px;
+  }
+
+  button {
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+    border: none;
+    border-radius: 6px;
+    background: white;
+    color: black;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+
+  button:hover {
+    background: #ddd;
+  }
+
+  #status {
+    margin-top: 20px;
+    font-size: 14px;
+    min-height: 20px;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h1>DONATIONS (KSh only)</h1>
+
+  <label for="amount">Amount (KSh):</label>
+  <input type="number" id="amount" placeholder="Enter amount" />
+
+  <button id="payBtn">Pay</button>
+
+  <p id="status"></p>
+</div>
+
+<script>
+document.getElementById('payBtn').addEventListener('click', async () => {
+  const amount = parseInt(document.getElementById('amount').value);
+  const statusEl = document.getElementById('status');
+
+  const res = await fetch('/pay', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ amount })
+  });
+
+  const data = await res.json();
+
+  if (res.ok) {
+    statusEl.textContent = `✅ ${data.message} (Session: ${data.session_id})`;
+  } else {
+    statusEl.textContent = `❌ ${data.error}`;
+  }
+});
+</script>
+
+</body>
+</html>
